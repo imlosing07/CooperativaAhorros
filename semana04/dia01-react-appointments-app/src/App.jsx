@@ -26,9 +26,9 @@ const App = () => {
     try {
       const logSesionesCod = localStorage.getItem('logSesionesCod');
       const logAccionesCod = localStorage.getItem('logAccionesCod');
-      
+
       await axios.post('http://localhost:8080/api/logout', { logSesionesCod, logAccionesCod });
-      
+
       localStorage.removeItem('user');
       localStorage.removeItem('logSesionesCod');
       localStorage.removeItem('logAccionesCod');
@@ -40,15 +40,15 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-t from-cyan-900 to-slate-300">
+    <div className="flex flex-col">
       {isLoggedIn ? (
-        <div className="flex flex-col">
-          <button 
-              onClick={handleLogout}
-              className="absolute mt-20 ml-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Cerrar sesión
-            </button>
+        <div className="flex flex-col h-screen" style={{ backgroundImage: 'linear-gradient(to bottom, transparent, #ffffff), url("https://www.stelorder.com/wp-content/uploads/2021/09/portada-sociedad-cooperativa-1.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          <button
+            onClick={handleLogout}
+            className="absolute mt-20 ml-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Cerrar sesión
+          </button>
           <AppointmentsList user={user} />
         </div>
       ) : (

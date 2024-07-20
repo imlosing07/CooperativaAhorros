@@ -12,7 +12,7 @@ const HomePage = ({ onLoginSuccess }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 flex flex-col">
       {/* Navbar */}
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,25 +36,25 @@ const HomePage = ({ onLoginSuccess }) => {
       </nav>
 
       {/* Hero section */}
-      <main className="flex-grow flex flex-col items-center justify-center text-white px-4 py-20">
-        <h1 className="text-5xl font-bold mb-6 text-center leading-tight">Bienvenido a Cooperativa Ahorro</h1>
+      <main className="flex-grow flex flex-col items-center justify-center text-white px-4 py-20 bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg shadow-lg">
+        <h1 className="text-5xl font-bold mb-6 text-center leading-tight drop-shadow-md">Bienvenido a Cooperativa Ahorro</h1>
         <p className="text-xl mb-12 text-center max-w-2xl">
           Somos una cooperativa comprometida con el crecimiento financiero de nuestros socios.
           Ofrecemos soluciones innovadoras y personalizadas para ayudarte a alcanzar tus metas económicas.
         </p>
-        <button className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-100 transition duration-300 ease-in-out transform hover:scale-105">
+        <button className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
           Comenzar ahora
         </button>
       </main>
 
       {/* Features section */}
-      <section className="bg-white py-20">
+      <section className="bg-gray-100 py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Nuestros Servicios</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {features.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center text-center">
-                <div className="text-5xl text-blue-600 mb-4">{feature.icon}</div>
+              <div key={index} className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <div className="text-5xl text-teal-600 mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
               </div>
@@ -68,8 +68,8 @@ const HomePage = ({ onLoginSuccess }) => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <p>&copy; 2024 Cooperativa Ahorro. Todos los derechos reservados.</p>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-blue-400">Términos</a>
-            <a href="#" className="hover:text-blue-400">Privacidad</a>
+            <a href="#" className="hover:text-teal-400">Términos</a>
+            <a href="#" className="hover:text-teal-400">Privacidad</a>
           </div>
         </div>
       </footer>
