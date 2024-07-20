@@ -1,89 +1,61 @@
-import { useState } from "react"
-
-import AppointmentsHeader from "./components/appointments/AppointmentsHeader"
-import AppointmentsForm from "./components/appointments/AppointmentsForm"
-import AppointmentsList from "./components/appointments/AppointmentsList"
+// src/App.js
+import React, { useState, useEffect } from "react";
+import HomePage from "./components/HomePage";
+import AppointmentsList from "./components/appointments/AppointmentsList";
+import axios from 'axios';
 
 const App = () => {
-  const INITIAL_APPOINTMENTS = [
-    {
-      id: '1',
-      petName: 'Hermosa',
-      petAge: '2',
-      ownerName: 'Victor',
-      appointmentDate: '',
-      appointmentTime: '',
-      symptoms: 'Duerme mucho 😒'
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('user');
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+      setIsLoggedIn(true);
     }
-  ]
+  }, []);
 
-  const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS)
-  const [currentAppointment, setCurrentAppointment] = useState()
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    setIsLoggedIn(true);
+  };
 
-  const handleSaveAppointment = (appointment, isNew) => {
-    // TODO: Avanzar la lógica para editar una cita médica
-
-    if (isNew) {
-      setAppointments([...appointments, appointment])
-    } else {
-      // TODO: Editar la cita con el id
-
-      const { id } = appointment
-
-      const appointmentFoundIndex = appointments.findIndex(
-        appointment => appointment.id === id
-      )
-
-      // console.log(appointmentFoundIndex, appointment)
-
-      // Hacemos una copia del estado original
+  const handleLogout = async () => {
+    try {
+      const logSesionesCod = localStorage.getItem('logSesionesCod');
+      const logAccionesCod = localStorage.getItem('logAccionesCod');
       
-      // Primer método de copia: superficial (shallow copy)
-      // const newAppointments = [...appointments]
+      await axios.post('http://localhost:8080/api/logout', { logSesionesCod, logAccionesCod });
       
-      // Segundo método de copia: profundo (deep copy) -
-      const newAppointments = structuredClone(appointments)
-
-      newAppointments[appointmentFoundIndex] = appointment
-
-      setAppointments(newAppointments)
+      localStorage.removeItem('user');
+      localStorage.removeItem('logSesionesCod');
+      localStorage.removeItem('logAccionesCod');
+      setUser(null);
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
     }
-  }
-
-  const handleRemove = (appointment) => {
-    console.log(appointment.id)
-    // TODO: terminar la lógica para eliminar una cita médica
-    const { id } = appointment
-
-    const newAppointments = appointments.filter(appointment => appointment.id !== id)
-
-    setAppointments(newAppointments)
-
-  }
-
-  const handleEdit = (appointment) => {
-    console.log(appointment)
-    setCurrentAppointment(appointment)
-  }
+  };
 
   return (
-    <>
-      <AppointmentsHeader title="Citas médicas para mascotas" />
+    <div className="min-h-screen bg-gradient-to-t from-cyan-900 to-slate-300">
+      {isLoggedIn ? (
+        <div className="flex flex-col">
+          <button 
+              onClick={handleLogout}
+              className="absolute mt-20 ml-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Cerrar sesión
+            </button>
+          <AppointmentsList user={user} />
+        </div>
+      ) : (
+        <HomePage onLoginSuccess={handleLoginSuccess} />
+      )}
+    </div>
+  );
+};
 
-      <main className="container m-auto flex gap-12 py-5">
-        <AppointmentsForm
-          onSaveAppointment={handleSaveAppointment}
-          appointment={currentAppointment}
-        />
-
-        <AppointmentsList
-          appointments={appointments}
-          onRemove={handleRemove}
-          onEdit={handleEdit}
-        />
-      </main>
-    </>
-  )
-}
-
-export default App
+export default App;

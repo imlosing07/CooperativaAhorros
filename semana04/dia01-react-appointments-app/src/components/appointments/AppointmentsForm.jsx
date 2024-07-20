@@ -1,120 +1,78 @@
-import { useEffect, useState } from "react"
+// src/components/AppointmentsForm.js
+import React, { useState, useEffect } from 'react';
+import { AccionForm, AreaForm, AvanceForm, CooperativaForm, DispositivosForm, FuncionesForm, CuentaForm, DireccionForm, LogAccionesForm, LogSesionesForm, ManualForm, MonedaForm, PersonaForm, UsuarioForm, TicketAyudaForm, TasaForm, SolucionForm, SocioForm, RolForm, ProductoForm, CargoForm} from '../forms';
+import { fetchNextId } from '../../services/Appointment';
+// Importa otros formularios aquí
 
-const AppointmentsForm = ({ onSaveAppointment, appointment }) => {
-  const INITIAL_FORM_STATE  = {
-    id: '',
-    petName: '',
-    petAge: '',
-    ownerName: '',
-    appointmentDate: '',
-    appointmentTime: '',
-    symptoms: ''
-  }
-  
-  const [form, setForm] = useState(INITIAL_FORM_STATE)
+const AppointmentsForm = ({ appointment, onSaveAppointment, selectedTable , isEditing  }) => {
+
+  const [nextId, setNextId] = useState(null);
 
   useEffect(() => {
-    if (appointment?.id) {
-      setForm(appointment)
+    if (!isEditing) {
+      // Fetch the next available ID from the backend
+      fetchNextId(selectedTable).then(setNextId);
     }
-  }, [appointment])
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  }, [isEditing, selectedTable]);
 
-    if (appointment?.id) {
-      // Aplico la lógica para la edición de la cita
-
-      onSaveAppointment(form, false)
-    } else {
-      // Aplico la lógica para una nueva cita
-      const newAppointment = {
-        ...form,
-        id: crypto.randomUUID()
-      }
-  
-      console.log('Guardando ...', newAppointment)
-  
-      onSaveAppointment(newAppointment, true)
+  const renderForm = () => {
+    switch (selectedTable) {
+      case 'accion':
+        return <AccionForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing}  nextId={nextId}/>;
+      case 'area':
+        return <AreaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'avance':
+        return <AvanceForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'cargo':
+        return <CargoForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'cooperativa':
+        return <CooperativaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'cuenta':
+        return <CuentaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'direccion':
+        return <DireccionForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'dispositivo':
+        return <DispositivosForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'funciones':
+        return <FuncionesForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'logAcciones':
+        return <LogAccionesForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'logSesiones':
+        return <LogSesionesForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'manual':
+        return <ManualForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'moneda':
+        return <MonedaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'persona':
+        return <PersonaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'producto':
+        return <ProductoForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'rol':
+        return <RolForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'socio':
+        return <SocioForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'solucion':
+        return <SolucionForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'tasa':
+        return <TasaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'ticketAyuda':
+        return <TicketAyudaForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      case 'usuario':
+        return <UsuarioForm appointment={appointment} onSaveAppointment={onSaveAppointment} isEditing={isEditing} nextId={nextId}/>;
+      // Añade casos para otros formularios aquí
+      default:
+        return null;
     }
-
-    setForm(INITIAL_FORM_STATE)
-  }
-
-  const handleChange = (event) => {
-    // console.log({ input: event.target })
-    const { name, value } = event.target
-
-    setForm({ ...form, [name]: value })
-  }
+  };
 
   return (
-    <section className="w-96 p-4 border rounded-md">
-      <h2 className="text-2xl text-center mb-4">Nuevo paciente</h2>
-
-      {/* <pre>{JSON.stringify(form, null, 2)}</pre> */}
-
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit}
-      >
-        <input
-          type="text"
-          name="petName"
-          placeholder="Nombre de la mascota"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.petName}
-        />
-        <input
-          type="number"
-          name="petAge"
-          placeholder="Edad de la mascota"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.petAge}
-        />
-        <input
-          type="text"
-          name="ownerName"
-          placeholder="Dueño de la mascota"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.ownerName}
-        />
-        <input
-          type="date"
-          name="appointmentDate"
-          placeholder="Fecha de la cita"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.appointmentDate}
-        />
-        <input
-          type="time"
-          name="appointmentTime"
-          placeholder="Hora de la cita"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.appointmentTime}
-        />
-        <textarea
-          name="symptoms"
-          placeholder="Síntomas"
-          rows="5"
-          className="border p-3 shadow-md rounded-md w-full"
-          onChange={handleChange}
-          value={form.symptoms}
-        >
-        </textarea>
-        <input
-          type="submit"
-          className="p-3 bg-green-600 text-white rounded-md cursor-pointer hover:bg-green-800 duration-300"
-          value="Guardar cita"
-        />
-      </form>
+    <section className="bg-white dark:bg-gray-900 antialiased w-max p-4 border rounded-md flex flex-col items-center gap-4">
+      <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-2xl">
+        {isEditing ? `Editar ${selectedTable}` : `Crear ${selectedTable}`}
+      </h2>
+      {renderForm()}
     </section>
-  )
-}
+  );
+};
 
-export default AppointmentsForm
+export default AppointmentsForm;
